@@ -2,8 +2,36 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    concat: {
-    },
+
+
+     concat: {
+
+      options: {
+        separator: ';'
+      },
+
+
+        app: {
+          src: ['public/client/app.js',
+                'public/client/link.js',
+                'public/client/links.js',
+                'public/client/linkView.js',
+                'public/client/linksView.js',
+                'public/client/createLinkView.js',
+                'public/client/router.js'
+          ],
+          dest: 'public/dist/application.js'
+        },
+
+        lib: {
+          src: ['public/lib/jquery.js',
+                'public/lib/underscore.js',
+                'public/lib/backbone.js',
+                'public/lib/handlebars.js'
+              ],
+          dest: 'public/dist/libraries.js'
+        },
+      },
 
     mochaTest: {
       test: {
@@ -21,7 +49,15 @@ module.exports = function(grunt) {
     },
 
     uglify: {
-    },
+      static_mappings: {
+          // Because these src-dest file mappings are manually specified, every
+          // time a new file is added or removed, the Gruntfile has to be updated.
+          files: [
+          {src: 'public/dist/application.js', dest: 'public/dist/application.min.js'},
+          {src: 'public/dist/libraries.js', dest: 'public/dist/libraries.min.js'}
+          ],
+        }
+      },
 
     jshint: {
       files: [
@@ -95,6 +131,8 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
   ]);
+
+  grunt.registerTask('default', ['concat:app', 'concat:lib', 'uglify']);
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
